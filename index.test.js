@@ -35,7 +35,7 @@ test("script with -r dotenv/config", () => {
 
 import process from "node:process";
 
-test("programmatic - load from file", () => {
+test("programmatic - native - load from file", () => {
   delete process.env.MY_VAR;
   process.loadEnvFile(".env");
   assert.equal(process.env.MY_VAR, "from-env-file");
@@ -43,8 +43,22 @@ test("programmatic - load from file", () => {
 
 import util from "node:util";
 
-test("programmatic - parse from string", () => {
+test("programmatic - native - parse from string ", () => {
   assert.deepEqual(util.parseEnv("MY_VAR=my-value"), {
+    MY_VAR: "my-value",
+  });
+});
+
+import dotenv from "dotenv";
+
+test("programmatic - dotenv - load from file", () => {
+  delete process.env.MY_VAR;
+  dotenv.config();
+  assert.equal(process.env.MY_VAR, "from-env-file");
+});
+
+test("programmatic - dotenv - parse from string", () => {
+  assert.deepEqual(dotenv.parse("MY_VAR=my-value"), {
     MY_VAR: "my-value",
   });
 });
