@@ -32,3 +32,19 @@ test("script with -r dotenv/config", () => {
   const output = spawnSync("node", ["--run", "start:dotenv"]);
   assert.ok(output.output.toString().includes("from-env-file"));
 });
+
+import process from "node:process";
+
+test("programmatic - load from file", () => {
+  delete process.env.MY_VAR;
+  process.loadEnvFile(".env");
+  assert.equal(process.env.MY_VAR, "from-env-file");
+});
+
+import util from "node:util";
+
+test("programmatic - parse from string", () => {
+  assert.deepEqual(util.parseEnv("MY_VAR=my-value"), {
+    MY_VAR: "my-value",
+  });
+});
